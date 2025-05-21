@@ -28,6 +28,12 @@ async def on_ready():
 async def hello(interaction: discord.Interaction):
     await interaction.response.send_message("Hello, world!")
 
+# Command that convert a utf8 string to hexadecimal
+@bot.tree.command(name="tohex", description="Convert a utf8 string to hexadecimal")
+async def to_hex(interaction: discord.Interaction, text: str):
+    hex_string = text.encode("utf-8").hex()
+    await interaction.response.send_message(f"Hexadecimal: {hex_string}")
+
 # Run the bot with your token
 bot.run(TOKEN)
 
