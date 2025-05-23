@@ -2,6 +2,7 @@ import discord
 import os
 from dotenv import load_dotenv
 from discord.ext import commands
+from cryptoUtils import caesarBruteForce
 
 # Load environment variables from .env file
 load_dotenv()
@@ -33,6 +34,15 @@ async def hello(interaction: discord.Interaction):
 async def to_hex(interaction: discord.Interaction, text: str):
     hex_string = text.encode("utf-8").hex()
     await interaction.response.send_message(f"Hexadecimal: {hex_string}")
+
+# Command who decrypt a caesar cipher
+@bot.tree.command(name="caesar", description="Decrypt a caesar cipher")
+async def caesar(interaction: discord.Interaction, text: str):
+    decrypted_texts = caesarBruteForce(text)[1:]
+    embed = discord.Embed(title="Caesar Cipher Decryption", description="Decrypted texts for all shifts:")
+    for i, decrypted_text in enumerate(decrypted_texts):
+        embed.add_field(name=f"Shift {i+1}", value=decrypted_text, inline=True)
+    await interaction.response.send_message(embed=embed)
 
 # Run the bot with your token
 bot.run(TOKEN)
