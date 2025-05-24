@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from discord.ext import commands
 from cryptoUtils import caesarBruteForce
+from base64 import b64encode, b64decode
 
 # Load environment variables from .env file
 load_dotenv()
@@ -38,6 +39,21 @@ async def from_hex(interaction: discord.Interaction, hex_string: str):
         await interaction.response.send_message(f"UTF-8 String: {utf8_string}")
     except ValueError:
         await interaction.response.send_message("Invalid hexadecimal string.", ephemeral=True)
+
+# Command that convert a utf8 string to base64
+@bot.tree.command(name="tobase64", description="Convert a utf8 string to base64")
+async def to_base64(interaction: discord.Interaction, text: str):
+    base64_string = b64encode(text.encode("utf-8")).decode("utf-8")
+    await interaction.response.send_message(f"Base64 String: {base64_string}")
+
+# Command that convert a base64 string to utf8
+@bot.tree.command(name="frombase64", description="Convert a base64 string to utf8")
+async def from_base64(interaction: discord.Interaction, base64_string: str):
+    try:
+        utf8_string = b64decode(base64_string.encode("utf-8")).decode("utf-8")
+        await interaction.response.send_message(f"UTF-8 String: {utf8_string}")
+    except (ValueError, UnicodeDecodeError):
+        await interaction.response.send_message("Invalid base64 string.", ephemeral=True)
 
 # Command who decrypt a caesar cipher
 @bot.tree.command(name="caesar", description="Decrypt a caesar cipher")
